@@ -1,27 +1,63 @@
-'use strict';
+"use strict";
+
+const { UUIDV4 } = require("sequelize");
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Candidates', {
+    await queryInterface.createTable("Candidates", {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: UUIDV4,
       },
-      firstname: {
-        type: Sequelize.STRING
-      },
-      createdAt: {
+      state_id: {
+        type: Sequelize.UUID,
         allowNull: false,
-        type: Sequelize.DATE
       },
-      updatedAt: {
+      name: {
+        type: Sequelize.STRING,
         allowNull: false,
-        type: Sequelize.DATE
-      }
+      },
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      bio: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      cv: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      photo: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      election_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "Elections",
+          key: "id",
+        },
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.fn("NOW"),
+
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Candidates');
-  }
+    await queryInterface.dropTable("Candidates");
+  },
 };

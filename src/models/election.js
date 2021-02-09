@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Election.hasMany(models.State);
+      Election.hasMany(models.state);
     }
   }
   Election.init(
@@ -37,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
+      underscored: true,
       modelName: "Election",
     }
   );

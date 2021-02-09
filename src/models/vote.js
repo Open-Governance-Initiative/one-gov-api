@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Vote.belongsToMany(models.Election);
-      Vote.belongsToMany(models.Users);
-      Vote.belongsTo(models.Candidates);
+      Vote.belongsToMany(models.election);
+      Vote.belongsToMany(models.users);
+      Vote.belongsTo(models.candidates);
     }
   }
   Vote.init(
@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
+      underscored: true,
       modelName: "Vote",
     }
   );
