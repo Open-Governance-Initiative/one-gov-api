@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.UUID,
         defaultValue: UUIDV4,
+        primaryKey: true,
         unique: true,
       },
       name: {
@@ -27,9 +28,9 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
       },
       nydp_code: {
-        type: DataTypes.UUID,
-        defaultValue: UUIDV4,
+        type: DataTypes.STRING,
         unique: true,
+        allowNull: false,
       },
       password: {
         type: DataTypes.STRING,
@@ -48,8 +49,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
+      modelName: "users",
       underscored: true,
-      modelName: "Users",
     }
   );
   return Users;

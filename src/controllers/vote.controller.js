@@ -1,6 +1,6 @@
 /**
  * @name AuthController
- * @description performs and handles all authentication actions
+ * @description performs and handles all voting actions
  */
 
 class VoteController {

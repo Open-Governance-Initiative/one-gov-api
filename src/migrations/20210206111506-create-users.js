@@ -4,7 +4,7 @@ const { UUIDV4 } = require("sequelize");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Users", {
+    await queryInterface.createTable("users", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -20,9 +20,9 @@ module.exports = {
         unique: true,
       },
       nydp_code: {
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
+        type: Sequelize.STRING,
         unique: true,
+        allowNull: false,
       },
       password: {
         type: Sequelize.STRING,
@@ -41,6 +41,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Users");
+    await queryInterface.dropTable("users");
   },
 };

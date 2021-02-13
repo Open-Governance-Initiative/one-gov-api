@@ -1,6 +1,6 @@
 /**
  * @name ElectionController
- * @description performs and handles all authentication actions
+ * @description performs and handles all election activity
  */
 
 class ElectionController {

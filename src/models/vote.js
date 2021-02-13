@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { Model, UUIDV4 } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Vote extends Model {
     /**
@@ -9,9 +9,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Vote.belongsToMany(models.election);
-      Vote.belongsToMany(models.users);
-      Vote.belongsTo(models.candidates);
+      Vote.belongsToMany(models.elections, {
+        through: "votes_elections",
+        foreignKey: "election_id"
+      });
+      Vote.belongsToMany(models.users, {
+        through: "votes_users",
+        foreignKey: "user_id"
+      });
+      Vote.belongsTo(models.candidates, {
+        foreignKey: "candidate_id"
+      });
     }
   }
   Vote.init(
@@ -20,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
         defaultValue: UUIDV4,
+        primaryKey: true
       },
       candidate_id: {
         type: DataTypes.UUID,
@@ -37,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       underscored: true,
-      modelName: "Vote",
+      modelName: "votes",
     }
   );
   return Vote;

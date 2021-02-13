@@ -4,7 +4,7 @@ const { UUIDV4 } = require("sequelize");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Votes", {
+    await queryInterface.createTable("votes", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "Candidates",
+          model: "candidates",
           key: "id",
         },
       },
@@ -23,7 +23,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "Users",
+          model: "users",
           key: "id",
         },
       },
@@ -31,7 +31,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "Elections",
+          model: "elections",
           key: "id",
         },
       },
@@ -50,6 +50,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Votes");
+    await queryInterface.dropTable("votes");
   },
 };

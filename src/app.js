@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import authRouter from "./routes/authRoutes";
 
 const app = express();
 
@@ -12,6 +13,7 @@ app.get("/", (req, res) => {
     status: "success",
   });
 });
+app.use("/auth", authRouter)
 
 const PORT = process.env.PORT || 4200;
 app.listen(PORT, () => {

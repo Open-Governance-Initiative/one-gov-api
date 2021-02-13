@@ -1,5 +1,5 @@
 "use strict";
-const { Model, UUIDV4, DATE } = require("sequelize");
+const { Model, UUIDV4 } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Election extends Model {
     /**
@@ -9,7 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Election.hasMany(models.state);
+      Election.hasMany(models.states);
+     
     }
   }
   Election.init(
@@ -17,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.UUID,
         defaultValue: UUIDV4,
+        primaryKey: true
       },
       title: {
         type: DataTypes.STRING,
@@ -38,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       underscored: true,
-      modelName: "Election",
+      modelName: "elections",
     }
   );
   return Election;

@@ -9,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Candidates.hasMany(models.vote);
+      Candidates.belongsTo(models.states, {
+        foreignKey: "state_id",
+      });
     }
   }
   Candidates.init(
@@ -17,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.UUID,
         defaultValue: UUIDV4,
+        primaryKey: true,
       },
       state_id: {
         type: DataTypes.UUID,
@@ -55,7 +58,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       underscored: true,
-      modelName: "Candidates",
+      modelName: "candidates",
     }
   );
   return Candidates;
