@@ -13,9 +13,7 @@ class AuthController {
       // add validation
       //check for existing users
       let salt = await bcrypt.genSalt(10);
-      let hashedPassword = await bcrypt.hash(password, salt);
-      console.log(hashedPassword)
-      console.log(models.users)
+      let hashedPassword = await bcrypt.hash(password, salt)
       const newUser = await models.users.create({
         name,
         email,

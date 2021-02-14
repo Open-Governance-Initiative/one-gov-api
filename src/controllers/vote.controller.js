@@ -8,4 +8,6 @@ class VoteController {
   static async getAllVotesForAnElection(req, res) {}
 }
 
+// createVote
+// listVoters
 export default VoteController;

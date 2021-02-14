@@ -8,4 +8,9 @@ class ElectionController {
   static async getPastElections(req, res) {}
 }
 
+// createElection
+// listElections
+// getElection
+// createElectionStates
+
 export default ElectionController;
