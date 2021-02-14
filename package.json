@@ -27,13 +27,13 @@
     "pg": "^8.5.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^6.5.0",
-    "sequelize-cli": "^6.2.0"
-  },
-  "devDependencies": {
+    "sequelize-cli": "^6.2.0",
     "@babel/node": "^7.12.13",
     "@babel/plugin-transform-runtime": "^7.12.15",
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.13",
     "@babel/runtime": "^7.12.13"
+  },
+  "devDependencies": {
   }
 }
