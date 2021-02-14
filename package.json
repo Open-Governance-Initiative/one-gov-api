@@ -8,7 +8,7 @@
     "start:dev": "nodemon --exec babel-node ./src/app.js",
     "build": "npm run clean && npm run build-babel",
     "clean": "rm -rf build && mkdir build",
-    "build-babel": "babel -d ./build ./src/app.js -s",
+    "build-babel": "babel -d ./build ./src -s",
     "migrate:db": "sequelize db:migrate",
     "migrate:undo": "sequelize db:migrate:undo",
     "migrate:undo:all": "sequelize db:migrate:undo:all"
