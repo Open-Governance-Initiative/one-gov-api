@@ -9,9 +9,13 @@
     "build": "npm run clean && npm run build-babel",
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel -d ./build ./src -s",
+    "migration": "npm run migrate:undo:all && npm run migrate:db",
     "migrate:db": "sequelize db:migrate",
     "migrate:undo": "sequelize db:migrate:undo",
-    "migrate:undo:all": "sequelize db:migrate:undo:all"
+    "migrate:undo:all": "sequelize db:migrate:undo:all",
+    "seeder": "npm run seed:undo && npm run seed",
+    "seed": "node_modules/.bin/sequelize db:seed:all",
+    "seed:undo": "node_modules/.bin/sequelize db:seed:undo:all"
   },
   "author": "One Gov Volunteers",
   "license": "MIT",
@@ -34,6 +38,5 @@
     "@babel/preset-env": "^7.12.13",
     "@babel/runtime": "^7.12.13"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

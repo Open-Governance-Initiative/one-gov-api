@@ -21,7 +21,7 @@ module.exports = {
         },
       },
       name: {
-        type: Sequelize.UUID,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       date_created: {
