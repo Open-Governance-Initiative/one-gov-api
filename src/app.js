@@ -1,8 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
-import authRoutes from "./routes/authRoutes";
+import router from "./routes/index";
+import dotenv from "dotenv";
 
 const app = express();
+dotenv.config();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -13,7 +15,8 @@ app.get("/", (req, res) => {
     status: "success",
   });
 });
-app.use("/auth", authRoutes)
+
+app.use("/", router);
 
 const PORT = process.env.PORT || 4200;
 app.listen(PORT, () => {
