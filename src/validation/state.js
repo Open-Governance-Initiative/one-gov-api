@@ -15,7 +15,7 @@ const validation = state => {
         "any.required": "election_id is required.",
         "string.empty": "election_id cannot be an empty field.",
         "string.base": "election_id must be a string.",
-        "string.guid": "wlwction_id must be a UUID"
+        "string.guid": "election_id must be a UUID"
       }),
   }).messages({
     "object.unknown": "You have used an invalid key."
