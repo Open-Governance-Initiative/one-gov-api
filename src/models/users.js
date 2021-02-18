@@ -19,9 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         unique: true,
       },
-      name: {
+      username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       email: {
         type: DataTypes.STRING,
@@ -37,18 +38,12 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       role: {
-        type: DataTypes.ENUM(['user', 'admin']),
-        defaultValue: "user",
+        type: DataTypes.ENUM("Admin", "User"),
+        defaultValue: "User",
       },
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-      updated_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
+      active: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
       },
     },
     {
