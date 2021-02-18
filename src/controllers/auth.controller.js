@@ -1,119 +1,107 @@
-/**
- * @name AuthController
- * @description performs and handles all authentication actions
- */
-
-import { validateLogin, validateUserSignup } from "../validation/auth";
-import AuthService from "../services/auth";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import dotenv from "dotenv";
+import {
+  registerValidation, loginValidation, profileValidate
+} from "../validation/auth";
+import User from "../services/auth";
+import jwtHelper from "../utilities/jwt";
 
-class AuthController {
-  static async signup(req, res) {
-    const { name, email, nydp_code, password, role } = req.body;
+dotenv.config();
+const { generateToken } = jwtHelper;
+/**
+ * @class UserController
+ * @description create, verify and log in user
+ * @exports UserController
+ */
+export default class UserController {
+  /**
+   * @param {object} req - The user request object
+   * @param {object} res - The user response object
+   * @returns {object} Success message
+   */
+  static async registerUser(req, res) {
     try {
-      // add validation
-      const { error } = validateUserSignup({
-        name,
-        email,
-        nydp_code,
-        role,
-        password,
-      });
+      const { error } = registerValidation(req.body);
       if (error) {
-        console.log(error);
-        throw new Error(error);
+        return res.status(400).json({ status: 400, error: error.message });
       }
-      await AuthService.checkIfUserExists(email, nydp_code);
-
-      let salt = await bcrypt.genSalt(10);
-      let hashedPassword = await bcrypt.hash(password, salt);
-      let userData = {
-        name,
-        email,
-        nydp_code,
-        role,
-        hashedPassword,
-      };
-      const newUser = await AuthService.createNewUser(userData);
-      jwt.sign(
-        {
-          email: newUser.email,
-          nydp_code: newUser.nydp_code,
-          userId: newUser._id,
-          role: newUser.role,
-        },
-        process.env.AUTHKEY,
-        { expiresIn: "72h" },
-        (err, token) => {
-          if (err) {
-            throw new Error(err);
-          }
-          if (token) {
-            return res.status(201).json({
-              status: "success",
-              message: "user signup successful",
-              data: newUser,
-              token,
-            });
-          }
-        }
-      );
-    } catch (error) {
-      console.log(error);
-      return res.status(400).json({
-        status: "failed",
-        message: error.message,
+      const { email, username, password, nydp_code } = req.body;
+      const Email = email.toLowerCase();
+      const Username = username.toLowerCase();
+      const emailExist = await User.emailExist(Email);
+      if (emailExist) return res.status(409).json({ status: 409, error: "Email already used by another user." });
+      const usernameExist = await User.usernameExist(Username);
+      if (usernameExist) return res.status(409).json({ status: 409, error: `Sorry, ${username} is not available. Please pick another username` });
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const newUser = { email: Email, username: Username, password: hashedPassword, nydp_code };
+      const createdUser = await User.createUser(newUser);
+      return res.status(201).json({
+        status: 201,
+        message: "User created! Kindly Login."
       });
+    } catch (error) {
+      return res.status(500).json({ status: 500, error: error.message });
     }
   }
-  static async login(req, res) {
-    const { email, password, nydp_code } = req.body;
+
+  /**
+   * @param {object} req - The user request object
+   * @param {object} res - The user response object
+   * @returns {object} Success message
+   */
+  static async loginUser(req, res) {
     try {
-      const { error } = validateLogin({ email, password, nydp_code });
-
-      if (error) {
-        throw new Error(error);
+      const { error } = loginValidation(req.body);
+      if (error) return res.status(400).json({ status: 400, error: error.message });
+      const { email, password } = req.body;
+      const Email = email.toLowerCase();
+      const user = await User.emailExist(Email);
+      if (!user) return res.status(404).json({ status: 404, error: "Email does not exist." });
+      const validpass = await bcrypt.compare(password, user.password);
+      if (!validpass) return res.status(404).json({ status: 400, error: "Password is not correct!." });
+      if (!user.active) {
+        return res.status(403).send({ message: "Sorry User has been De-activated, Please contact an admin." });
       }
-      const userExists = await AuthService.checkIfUserExists(email, nydp_code);
-
-      if (!userExists) {
-        throw new Error("user doesn't exists");
-      }
-
-      const match = await bcrypt.compare(password, userExists.password);
-      if (!match) {
-        throw new Error("invalid password");
-      }
-      jwt.sign(
-        {
-          email: userExists.email,
-          role: userExists.role,
-          userId: userExists._id,
-          nydp_code: userExists.nydp_code,
-        },
-        process.env.AUTHKEY,
-        { expiresIn: "72h" },
-        (err, token) => {
-          if (err) {
-            throw new Error(err);
-          } else {
-            return res.status(200).json({
-              status: "success",
-              message: "login successful",
-              data: userExists,
-              token,
-            });
-          }
-        }
-      );
-    } catch (error) {
-      return res.status(400).json({
-        status: "failed",
-        message: error.message,
+      const token = await generateToken({ user });
+      return res.status(200).json({
+        status: 200,
+        message: "User Logged in Successfully",
+        data: token
       });
+    } catch (error) {
+      return res.status(500).json({ status: 500, error: "Server error." });
     }
   }
+
+  /**
+   * @param {object} req - The user request object
+   * @param {object} res - The user response object
+   * @returns {object} Success message
+   */
+  static async updateUserProfile(req, res) {
+    try {
+      const { id } = req.decoded.user;
+      const { error } = profileValidate(req.body);
+      if (error) return res.status(400).json({ status: 400, error: error.message });
+      const updatedProfile = await User.updateUserProfile(id, req.body);
+      return res.status(200).json({ status: 200, message: "User profile updated", data: updatedProfile[1] });
+    } catch (error) {
+      return res.status(500).json({ status: 500, error: "Server error." });
+    }
+  }
+
+  /**
+   * @param {object} req - The user request object
+   * @param {object} res - The user response object
+   * @returns {object} Success message
+   */
+  static async getUsers(req, res) {
+    try {
+      const users = await User.getAllUsers();
+      return res.status(200).json({ status: 200, message: "Successfully retrived all Users", data: users });
+    } catch (error) {
+      return res.status(500).json({ status: 500, error: "Server Error" });
+    }
+  }
+
 }
-
-export default AuthController;

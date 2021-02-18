@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/", router);
+app.use("/api/v1", router);
 
 const PORT = process.env.PORT || 4200;
 app.listen(PORT, () => {

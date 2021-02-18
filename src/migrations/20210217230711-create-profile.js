@@ -1,54 +1,40 @@
-"use strict";
+'use strict';
 
 const { UUIDV4 } = require("sequelize");
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable('profiles', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: UUIDV4,
       },
-      username: {
+      user_id: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      email: {
+      first_name: {
         type: Sequelize.STRING,
-        unique: true,
       },
-      nydp_code: {
+      last_name: {
         type: Sequelize.STRING,
-        unique: true,
-        allowNull: false,
       },
-      password: {
+      profile_picture: {
         type: Sequelize.STRING,
-        allowNull: false,
-      },
-      role: {
-        type: Sequelize.ENUM("Admin", "User"),
-        defaultValue: "User",
-      },
-      active: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true,
       },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
       },
       updated_at: {
         allowNull: false,
         type: Sequelize.DATE,
-        defaultValue: Sequelize.fn("NOW"),
       },
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("users");
-  },
+    await queryInterface.dropTable('profiles');
+  }
 };

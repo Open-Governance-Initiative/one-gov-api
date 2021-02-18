@@ -1,44 +1,90 @@
 import Joi from "joi";
 
-const validateUserSignup = (user) => {
-  const JoiSchema = Joi.object({
-    name: Joi.string().min(3).max(30).required().messages({
-      "any.required": "name is required.",
-    }),
-    email: Joi.string().email().min(5).max(50).required().messages({
-      "any.required": "email is required.",
-    }),
-    nydp_code: Joi.string().min(5).max(30).required().messages({
-      "any.required": "nydp_code is required.",
-    }),
-    role: Joi.valid("user", "admin").required().messages({
-      "any.required": "role is required.",
-    }),
-    password: Joi.string().min(5).max(30).required().messages({
-      "any.required": "password is required.",
-    }),
-  }).options({
-    abortEarly: false,
+const registerValidation = user => {
+  const schema = Joi.object({
+    username: Joi.string().required().alphanum().min(3)
+      .max(255)
+      .empty()
+      .messages({
+        "any.required": "Sorry, username is required",
+        "string.alphanum": "Sorry, Username must contain only alphanumeric characters",
+        "string.empty": "username cannot be an empty field",
+        "string.min": "username should have a minimum length of 3 and a maximum length of 255"
+      }),
+    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "uk", "co"] } }).min(5)
+      .max(100)
+      .empty()
+      .messages({
+        "any.required": "Sorry, email is required",
+        "string.empty": "Sorry, Email cannot be an empty field",
+        "string.email": "Please enter a valid email",
+      }),
+    password: Joi.string().required().empty().min(5)
+      .max(1024)
+      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+      .messages({
+        "any.required": "Sorry, password is required",
+        "string.pattern.base": "password must contain only alphanumeric characters.",
+        "string.empty": "Sorry, password cannot be an empty field",
+        "string.min": "password should have a minimum length of 5"
+      }),
+      nydp_code: Joi.string().min(5).max(30).required().messages({
+        "any.required": "nydp_code is required.",
+        "string.empty": "Sorry, nydp_code cannot be an empty field",
+        "string.min": "nydp_code should have a minimum length of 5"
+      }),
+  }).messages({
+    "object.unknown": "You have used an invalid key."
+  }).options({ abortEarly: false });
+  return schema.validate(user);
+};
+const loginValidation = user => {
+  const schema = Joi.object({
+    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ["com", "net", "uk", "co", "io"] } }).min(5)
+      .max(100)
+      .empty()
+      .messages({
+        "any.required": "Sorry, email is required",
+        "string.email": "Please enter a valid email",
+        "string.empty": "Sorry, Email cannot be an empty field",
+      }),
+    password: Joi.string().required().min(5).max(1024)
+      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+      .messages({
+        "string.pattern.base": "Password must contain only alphanumeric characters.",
+        "string.empty": "Sorry, password cannot be an empty field",
+        "string.min": "Password should have a minimum length of 5"
+      }),
+  }).messages({
+    "object.unknown": "You have used an invalid key."
   });
-
-  return JoiSchema.validate(user);
+  return schema.validate(user);
 };
 
-const validateLogin = (user) => {
-  const JoiSchema = Joi.object({
-    email: Joi.string().email().min(5).max(50).required().messages({
-      "any.required": "email is required.",
-    }),
-    password: Joi.string().min(5).max(30).required().messages({
-      "any.required": "password is required.",
-    }),
-    nydp_code: Joi.string().min(5).max(30).required().messages({
-      "any.required": "nydp_code is required.",
-    }),
-  }).options({
-    abortEarly: false,
-  });
-
-  return JoiSchema.validate(user);
+const profileValidate = profile => {
+  const schema = Joi.object({
+    first_name: Joi.string().max(40).empty()
+      .messages({
+        "string.base": "firstName must be a string",
+        "string.max": "firstName cannot be above 40 characters",
+        "string.empty": "Sorry, firstName cannot be an empty field"
+      }),
+    last_name: Joi.string().max(40).empty()
+      .messages({
+        "string.base": "lastName must be a string",
+        "string.max": "lastName cannot be above 40 characters",
+        "string.empty": "Sorry, lastName cannot be an empty field",
+      }),
+    profile_picture: Joi.string().empty()
+      .messages({
+        "string.base": "Please provide a valid link",
+        "string.empty": "Sorry, profilePicture cannot be an empty field"
+      }),
+  }).messages({
+    "object.unknown": "You have used an invalid key."
+  }).options({ abortEarly: false });
+  return schema.validate(profile);
 };
-export { validateUserSignup, validateLogin };
+
+export { registerValidation, loginValidation, profileValidate };
+

@@ -23,10 +23,8 @@ class StateController {
       if (!stateId) return res.status(404).json({ status: 404, error: "Election does not exist in the database." });
       const stateName = name[0].toUpperCase() + name.slice(1).toLowerCase();
       const state = await Admin.checkState(stateName);
-      console.log(stateName);
       if (state) return res.status(409).json({ status: 409, error: "This state already exists in the database." });
       const newState = { name: stateName, election_id };
-      console.log(newState);
       const createdState = await Admin.addState(newState);
       return res.status(201).json({ status: 201, message: "A state has been added.", data: createdState, });
     } catch (error) {
@@ -48,7 +46,6 @@ class StateController {
         data: states,
       });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({
         status: 500,
         error,
