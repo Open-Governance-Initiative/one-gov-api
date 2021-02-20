@@ -35,7 +35,6 @@ export default class AdminController {
   static async DeActivateUser(req, res) {
     try {
       const { id } = req.params;
-      console.log(id)
       const updatedUser = await User.deActivateUser(id);
       res.status(200).json({
         status: 200,
