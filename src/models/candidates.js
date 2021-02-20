@@ -10,8 +10,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Candidates.belongsTo(models.states, {
+        through: "stateCandidate",
         foreignKey: "state_id",
       });
+      Candidates.belongsTo(models.elections, {
+        through: "candidateElection",
+        foreignKey: "election_id",
+      });
+
     }
   }
   Candidates.init(
@@ -20,8 +26,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: UUIDV4,
         primaryKey: true,
+        
       },
       state_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      election_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
@@ -41,18 +52,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
       photo: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
-      election_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
       },
     },
     {

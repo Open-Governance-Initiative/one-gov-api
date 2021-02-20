@@ -14,6 +14,18 @@ module.exports = {
       state_id: {
         type: Sequelize.UUID,
         allowNull: false,
+        references: {
+          model: "states",
+          key: "id",
+        },
+      },
+      election_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "elections",
+          key: "id",
+        },
       },
       name: {
         type: Sequelize.STRING,
@@ -34,14 +46,6 @@ module.exports = {
       photo: {
         type: Sequelize.STRING,
         allowNull: true,
-      },
-      election_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: "elections",
-          key: "id",
-        },
       },
       created_at: {
         allowNull: false,
