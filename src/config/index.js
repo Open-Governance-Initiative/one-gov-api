@@ -25,6 +25,18 @@ module.exports = {
     dialect: "postgres",
   },
   production: {
-    use_env_variable: process.env.PROD_DB,
+    username: process.env.PROD_USERNAME,
+    password: process.env.PROD_PASSWORD,
+    database: process.env.PROD_DATABASE,
+    port: 5432,
+    host: process.env.PROD_HOST,
+    dialect: "postgres",
+    maxConcurrentQueries: 100,
+    pool: { maxConnections: 5, maxIdleTime: 30 },
+    define: {
+      timestamps: true,
+      underscored: true,
+    },
+    logQueryParameters: true,
   },
 };
