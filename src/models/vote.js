@@ -11,14 +11,14 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Vote.belongsToMany(models.elections, {
         through: "votes_elections",
-        foreignKey: "election_id"
+        foreignKey: "election_id",
       });
       Vote.belongsToMany(models.users, {
         through: "votes_users",
-        foreignKey: "user_id"
+        foreignKey: "user_id",
       });
       Vote.belongsTo(models.candidates, {
-        foreignKey: "candidate_id"
+        foreignKey: "candidate_id",
       });
     }
   }
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
         defaultValue: UUIDV4,
-        primaryKey: true
+        primaryKey: true,
       },
       candidate_id: {
         type: DataTypes.UUID,
@@ -41,6 +41,10 @@ module.exports = (sequelize, DataTypes) => {
       election_id: {
         type: DataTypes.UUID,
         allowNull: false,
+      },
+      ip_address: {
+        type: DataTypes.STRING,
+        unique: true,
       },
     },
     {

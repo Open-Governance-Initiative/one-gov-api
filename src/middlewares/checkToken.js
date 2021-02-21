@@ -66,7 +66,7 @@ export default class Authentication {
       return await database.users.findOne({
         where: {
           id,
-          role: "Admin"
+          role: "admin"
         }
       });
     } catch (error) {

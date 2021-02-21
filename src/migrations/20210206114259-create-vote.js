@@ -35,6 +35,10 @@ module.exports = {
           key: "id",
         },
       },
+      ip_address: {
+        type: Sequelize.STRING,
+        unique: true,
+      },
       created_at: {
         allowNull: false,
         type: Sequelize.DATE,
