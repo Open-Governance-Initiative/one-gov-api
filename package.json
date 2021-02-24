@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "npm run build && node ./build/app.js",
+    "start": "set NODE_ENV=production&&npm run build && node ./build/app.js",
     "start:dev": "nodemon --exec babel-node ./src/app.js",
     "build": "npm run clean && npm run build-babel",
     "clean": "rm -rf build && mkdir build",
@@ -13,7 +13,7 @@
     "migrate:db": "sequelize db:migrate",
     "migrate:undo": "sequelize db:migrate:undo",
     "migrate:undo:all": "sequelize db:migrate:undo:all",
-    "seeder": "npm run seed:undo && npm run seed",
+    "seeder": "pm run seed:undo && npm run seed",
     "seed": "node_modules/.bin/sequelize db:seed:all --debug",
     "seed:undo": "node_modules/.bin/sequelize db:seed:undo:all --debug"
   },
