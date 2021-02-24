@@ -9,7 +9,7 @@
     "build": "npm run clean && npm run build-babel",
     "clean": "rm -rf build && mkdir build",
     "build-babel": "babel -d ./build ./src -s",
-    "migration": "npm run migrate:undo:all && npm run migrate:db",
+    "migration": "set NODE_ENV=production&&npm run migrate:undo:all && npm run migrate:db",
     "migrate:db": "sequelize db:migrate",
     "migrate:undo": "sequelize db:migrate:undo",
     "migrate:undo:all": "sequelize db:migrate:undo:all",

@@ -38,5 +38,6 @@ module.exports = {
       underscored: true,
     },
     logQueryParameters: true,
+    language: "en",
   },
 };
