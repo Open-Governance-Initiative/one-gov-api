@@ -1,4 +1,4 @@
-import { validation, validateId } from "../validation/vote";
+import { voteValidation, validateId } from "../validation/vote";
 import VoteService from "../services/vote";
 /**
  * @name VoteController
@@ -9,12 +9,11 @@ class VoteController {
   static async voteACandidate(req, res) {
     const { candidate_id } = req.body;
     const { election_id } = req.params;
-    const { userId } = req.user;
+    const id = req.decoded.user["id"];
     let ipAddress =
-      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    console.log(ipAddress);
+      req.connection.remoteAddress || req.headers["x-forwarded-for"] ;
     try {
-      const { error } = validation({
+      const { error } = voteValidation({
         candidate_id,
         election_id,
       });
@@ -35,7 +34,7 @@ class VoteController {
           message: "you can't vote at this time",
         });
       }
-      const isAValidUserId = await VoteService.userExist(userId);
+      const isAValidUserId = await VoteService.userExist(id);
       if (isAValidUserId) {
         return res.status(400).json({
           status: "error",
@@ -43,7 +42,7 @@ class VoteController {
         });
       }
       const hasVotedInElection = await VoteService.checkIfUserHasVoted({
-        userId,
+        id,
         election_id,
       });
       if (hasVotedInElection) {
@@ -55,7 +54,7 @@ class VoteController {
 
       const newVote = {
         candidate_id,
-        user_id: userId,
+        user_id: id,
         election_id,
         ip_address: data.ipAddress,
       };
@@ -67,9 +66,7 @@ class VoteController {
         data: createdVote,
       });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ status: "error", message: "Server error." });
+      return res.status(500).json({ status: "error", message: error.message });
     }
   }
   static async getAllVotesForAnElection(req, res) {
